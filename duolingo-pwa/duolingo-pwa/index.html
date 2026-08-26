@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="英语学习">
+  <meta name="theme-color" content="#0F0F1E">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="icon" type="image/png" sizes="any" href="icon-original.png">
+  <title>英语学习工作台</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ============ 首页 ============ -->
+    <div id="home-screen" class="screen active">
+      <header class="app-header">
+        <div class="header-stats">
+          <div class="stat-item">
+            <span class="stat-icon">🔥</span>
+            <span class="stat-value" id="streak-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">⚡</span>
+            <span class="stat-value" id="xp-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">💎</span>
+            <span class="stat-value" id="gems-value">5</span>
+          </div>
+        </div>
+        <div class="header-title">英语学习工作台</div>
+        <div class="header-subtitle" id="daily-goal-text">每日目标：完成 2 课</div>
+      </header>
+
+      <!-- 每日提醒横幅 -->
+      <div class="reminder-banner" id="reminder-banner" style="display:none;">
+        <span class="reminder-icon">⏰</span>
+        <span class="reminder-text" id="reminder-text">今天还没学习哦，坚持打卡！</span>
+        <button class="reminder-action" id="reminder-action">开始学习</button>
+      </div>
+
+      <!-- 提醒设置 -->
+      <div class="reminder-settings" id="reminder-settings">
+        <span class="reminder-settings-label">🔔 每日提醒</span>
+        <div class="reminder-toggle-wrap">
+          <input type="checkbox" id="reminder-toggle" class="reminder-toggle">
+          <label for="reminder-toggle" class="toggle-label"></label>
+          <select id="reminder-time" class="reminder-time-select">
+            <option value="08:00">早 8:00</option>
+            <option value="12:00">午 12:00</option>
+            <option value="20:00" selected>晚 20:00</option>
+            <option value="21:00">晚 21:00</option>
+            <option value="22:00">晚 22:00</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="daily-progress-bar">
+        <div class="daily-progress-fill" id="daily-fill"></div>
+      </div>
+
+      <!-- 今日推荐 -->
+      <div class="today-recommend" id="today-recommend">
+        <div class="today-recommend-title">📚 今日推荐课程</div>
+        <div class="today-recommend-list" id="today-recommend-list"></div>
+      </div>
+
+      <div class="course-list" id="course-list">
+        <!-- 课程单元由 JS 动态生成 -->
+      </div>
+
+      <div class="footer-info">
+        <p id="footer-stats">💡 每天坚持练习，保持连胜！</p>
+      </div>
+    </div>
+
+    <!-- ============ 日历打卡页 ============ -->
+    <div id="calendar-screen" class="screen">
+      <header class="app-header">
+        <div class="header-title">📅 打卡日历</div>
+        <div class="header-subtitle" id="calendar-stats-text">总打卡 0 天 · 最长连胜 0 天</div>
+      </header>
+
+      <div class="calendar-section">
+        <div class="calendar-nav">
+          <button class="cal-nav-btn" id="cal-prev">‹</button>
+          <span class="cal-month-label" id="cal-month-label"></span>
+          <button class="cal-nav-btn" id="cal-next">›</button>
+        </div>
+
+        <div class="streak-summary" id="streak-summary">
+          <div class="streak-summary-box">
+            <div class="streak-summary-num" id="cal-current-streak">0</div>
+            <div class="streak-summary-label">当前连胜</div>
+          </div>
+          <div class="streak-summary-box">
+            <div class="streak-summary-num" id="cal-total-days">0</div>
+            <div class="streak-summary-label">总打卡天数</div>
+          </div>
+          <div class="streak-summary-box">
+            <div class="streak-summary-num" id="cal-best-streak">0</div>
+            <div class="streak-summary-label">最长连胜</div>
+          </div>
+        </div>
+
+        <div class="calendar-grid" id="calendar-grid">
+          <!-- 日历由 JS 动态生成 -->
+        </div>
+
+        <div class="calendar-legend">
+          <div class="legend-item"><span class="legend-dot checked"></span>已打卡</div>
+          <div class="legend-item"><span class="legend-dot today"></span>今天</div>
+          <div class="legend-item"><span class="legend-dot empty"></span>未打卡</div>
+        </div>
+      </div>
+
+      <!-- 近期学习记录 -->
+      <div class="recent-records">
+        <div class="recent-title">📋 近期学习记录</div>
+        <div class="recent-list" id="recent-list"></div>
+      </div>
+    </div>
+
+    <!-- ============ 练习页 ============ -->
+    <div id="lesson-screen" class="screen">
+      <div class="lesson-header">
+        <button class="btn-close" id="btn-exit-lesson">✕</button>
+        <div class="lesson-progress-bar">
+          <div class="lesson-progress-fill" id="lesson-progress-fill"></div>
+        </div>
+        <div class="lesson-hearts">
+          <span>❤️</span>
+          <span id="lesson-hearts-value">3</span>
+        </div>
+      </div>
+
+      <div class="question-area" id="question-area">
+        <!-- 题目内容由 JS 动态生成 -->
+      </div>
+
+      <div class="feedback-bar" id="feedback-bar">
+        <span id="feedback-text"></span>
+      </div>
+
+      <div class="lesson-footer">
+        <button class="btn-skip" id="btn-skip">跳过</button>
+        <button class="btn-check" id="btn-check" disabled>检查</button>
+      </div>
+    </div>
+
+    <!-- ============ 完成页 ============ -->
+    <div id="result-screen" class="screen">
+      <div class="result-content">
+        <div class="result-icon" id="result-icon">🎉</div>
+        <h2 class="result-title" id="result-title">课程完成！</h2>
+        <div class="result-stats">
+          <div class="result-stat-box">
+            <div class="result-stat-num" id="result-xp">+0</div>
+            <div class="result-stat-label">总经验值</div>
+          </div>
+          <div class="result-stat-box">
+            <div class="result-stat-num" id="result-accuracy">0%</div>
+            <div class="result-stat-label">正确率</div>
+          </div>
+          <div class="result-stat-box">
+            <div class="result-stat-num" id="result-streak">🔥 0</div>
+            <div class="result-stat-label">连胜天数</div>
+          </div>
+        </div>
+        <div class="result-checkin-info" id="result-checkin-info"></div>
+        <button class="btn-continue" id="btn-continue">继续学习</button>
+      </div>
+    </div>
+
+    <!-- ============ 底部导航栏 ============ -->
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="nav-btn active" data-screen="home-screen" id="nav-home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">课程</span>
+      </button>
+      <button class="nav-btn" data-screen="calendar-screen" id="nav-calendar">
+        <span class="nav-icon">📅</span>
+        <span class="nav-label">打卡</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
